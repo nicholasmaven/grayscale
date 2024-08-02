@@ -14,8 +14,6 @@
    2. 无验证, 直接灰度
 2. 方法灰度: 针对重构的场景, 利用线上流量辅助验证
 
-**该组件已在生产环境业务使用, 非YY自娱自乐**
-
 ## 设计目标
 1. 提供接口灰度和方法灰度功能
 2. 提供可选的灰度对照(验证)功能, 默认不启用
@@ -30,6 +28,7 @@
 举例: 假设灰度比例从50%降到20%, 原先那30%走灰度的就不走了
 
 ## 使用方式
+### 两种使用方式
 组件提供两种使用方式
 1. 断言式: 只做条件判断, 业务代码据此决定是否走灰度逻辑
 2. 代理式: 做条件判断与逻辑执行, 业务可选择性开启结果对照, 灰度组件接管常规和灰度逻辑执行, 有少量代码侵入
@@ -80,7 +79,7 @@ gray.config.{bizKey}, bizKey表示业务标识, 可自定义
 private GraySupport graySupport;
 
 public Resposne service(PropertyHolder holder) {
-    if(graySupport.shouldGray("myProperty", holder) {
+    if(graySupport.shouldGray("myProperty", holder)) {
         //....
     } else {
 		//...

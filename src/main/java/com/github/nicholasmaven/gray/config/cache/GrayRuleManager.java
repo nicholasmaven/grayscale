@@ -9,6 +9,7 @@ import com.github.nicholasmaven.gray.config.rule.parser.PercentGrayRuleParser;
 import com.github.nicholasmaven.gray.config.rule.parser.RangeGrayRuleParser;
 import com.github.nicholasmaven.gray.enums.AdoptOnDiffTypeEnum;
 import com.github.nicholasmaven.gray.enums.GrayConditionTypeEnum;
+import com.github.nicholasmaven.gray.event.GrayRuleChangeEvent;
 import com.github.nicholasmaven.gray.runtime.diff.AdoptBreakOnDiff;
 import com.github.nicholasmaven.gray.runtime.diff.AdoptGrayOnDiff;
 import com.github.nicholasmaven.gray.runtime.diff.AdoptOnDiff;
@@ -18,7 +19,6 @@ import com.github.nicholasmaven.gray.runtime.misc.GrayMetadata;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * @author mawen
  */
 @Slf4j
-public class GrayRuleManager implements ApplicationListener<EnvironmentChangeEvent> {
+public class GrayRuleManager implements ApplicationListener<GrayRuleChangeEvent> {
 
     private final static String GRAY_CONFIG_PREFIX = "gray.config";
     private static GrayRootProperties grayRootProperties;
@@ -207,9 +207,9 @@ public class GrayRuleManager implements ApplicationListener<EnvironmentChangeEve
         CUSTOMIZE_ADOPT_DIFF_MAP.put(name, adoptOnDiff);
     }
 
-    @Override
-    public void onApplicationEvent(EnvironmentChangeEvent environmentChangeEvent) {
-        Set<String> keys = environmentChangeEvent.getKeys();
+   public void onApplicationEvent(GrayRuleChangeEvent event) {
+        log.info("listen to refresh gray config:{}",event);
+        Set<String> keys = event.getKeys();
         if (CollectionUtils.isEmpty(keys)) {
             return;
         }
@@ -221,4 +221,5 @@ public class GrayRuleManager implements ApplicationListener<EnvironmentChangeEve
             }
         }
     }
+
 }
